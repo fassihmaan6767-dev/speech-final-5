@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Speech to Text</title>
+</head>
+<body>
+  <script>
+    // Wait until DOM loads
+    document.addEventListener("DOMContentLoaded", () => {
+      const speakBtn = document.getElementById("speakBtn"); // Canva ka existing button
+      const messageBox = document.getElementById("messageBox"); // Canva ka existing input/textarea
+
+      if (!speakBtn || !messageBox) {
+        console.error("Speak button ya message box nahi mila!");
+        return;
+      }
+
+      // Speech recognition setup
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert("Speech Recognition is not supported in this browser.");
+        return;
+      }
+
+      const recognition = new SpeechRecognition();
+      recognition.lang = "en-US";
+      recognition.interimResults = false;
+
+      // Jab button press ho to listening start ho
+      speakBtn.addEventListener("click", () => {
+        speakBtn.innerText = "Listening...";
+        recognition.start();
+      });
+
+      // Jab result mile to direct message box me likh do
+      recognition.addEventListener("result", (event) => {
+        const transcript = event.results[0][0].transcript;
+        messageBox.value = transcript; // direct box me likh do
+        speakBtn.innerText = "Speak";
+      });
+
+      // Jab complete ho jaye
+      recognition.addEventListener("end", () => {
+        speakBtn.innerText = "Speak";
+      });
+    });
+  </script>
+</body>
+</html>
